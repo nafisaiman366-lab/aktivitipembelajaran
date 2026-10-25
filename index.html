@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kembara Zoo | Jom Bermain Kata Adjektif</title>
+  <style>
+    :root {
+      --forest: #173f2a;
+      --leaf: #2f7547;
+      --lime: #c9e88a;
+      --cream: #fff9e9;
+      --gold: #f5c75e;
+      --text: #193a29;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 22px 14px;
+      color: var(--text);
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      background: transparent;
+    }
+    .jungle-card {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: clamp(22px, 5vw, 38px);
+      text-align: center;
+      border: 3px solid rgba(255,255,255,.8);
+      border-radius: 28px;
+      background: linear-gradient(145deg, #eff8d9 0%, #d9efbd 45%, #f9f4d9 100%);
+      box-shadow: 0 12px 28px rgba(23,63,42,.18);
+    }
+    .jungle-card::before, .jungle-card::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      background: rgba(65, 133, 73, .13);
+    }
+    .jungle-card::before { top: -75px; left: -50px; }
+    .jungle-card::after { right: -65px; bottom: -80px; width: 220px; height: 220px; }
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--leaf);
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .profile-wrap {
+      position: relative;
+      width: 154px;
+      height: 154px;
+      margin: 0 auto 18px;
+    }
+    .profile-ring {
+      position: absolute;
+      inset: -7px;
+      border: 3px dashed #78a85b;
+      border-radius: 50%;
+      animation: spin 18s linear infinite;
+    }
+    .profile-photo {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: 5px solid white;
+      border-radius: 50%;
+      background: #d4e8ba;
+      box-shadow: 0 7px 18px rgba(23,63,42,.2);
+      animation: bob 3s ease-in-out infinite;
+    }
+    h1 {
+      margin: 0 0 10px;
+      color: var(--forest);
+      font-size: clamp(1.45rem, 4.5vw, 2.15rem);
+      line-height: 1.2;
+    }
+    .subtitle {
+      margin: 0 auto 20px;
+      max-width: 540px;
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+    .speech {
+      max-width: 600px;
+      margin: 0 auto 20px;
+      padding: 18px 20px;
+      border-left: 5px solid var(--gold);
+      border-radius: 14px;
+      background: rgba(255,255,255,.78);
+      font-size: clamp(1rem, 2.6vw, 1.12rem);
+      line-height: 1.8;
+      text-align: left;
+    }
+    .speech strong { color: #245b36; }
+    .audio-panel {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 17px;
+      border: 1px solid rgba(47,117,71,.22);
+      border-radius: 18px;
+      background: rgba(255,255,255,.65);
+    }
+    .audio-label { margin: 0 0 12px; font-weight: 800; color: var(--forest); }
+    .controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    button {
+      min-height: 44px;
+      padding: 11px 17px;
+      border: 0;
+      border-radius: 999px;
+      color: white;
+      background: var(--leaf);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease;
+    }
+    button:hover { transform: translateY(-2px); background: var(--forest); }
+    button:focus-visible { outline: 3px solid #d18d1d; outline-offset: 3px; }
+    button.secondary { color: var(--forest); background: #e8f2d5; border: 1px solid #9bbd7a; }
+    .wave {
+      height: 35px;
+      margin: 14px auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .wave span {
+      width: 5px;
+      height: 8px;
+      border-radius: 99px;
+      background: #4b8a4e;
+      transform-origin: center;
+    }
+    .wave.playing span { animation: wave .72s ease-in-out infinite alternate; }
+    .wave span:nth-child(2n) { animation-delay: .12s; }
+    .wave span:nth-child(3n) { animation-delay: .25s; }
+    .wave span:nth-child(4n) { animation-delay: .36s; }
+    .status { min-height: 1.4em; margin: 8px 0 0; font-size: .9rem; color: #365d3c; }
+    .animal-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 19px; }
+    .animal-chip { padding: 7px 11px; border: 1px solid rgba(47,117,71,.22); border-radius: 999px; background: rgba(255,255,255,.6); font-size: .9rem; }
+    .footer { margin: 18px 0 0; font-size: .78rem; color: #55745a; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    @keyframes wave { from { height: 7px; } to { height: 30px; } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+    @media (max-width: 420px) {
+      .profile-wrap { width: 130px; height: 130px; }
+      .jungle-card { border-radius: 22px; }
+      .speech { padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="jungle-card" aria-labelledby="main-title">
+    <div class="eyebrow">🌿 Kembara Zoo • Misi Kata Adjektif</div>
+
+    <div class="profile-wrap" aria-label="Gambar profil cikgu">
+      <div class="profile-ring" aria-hidden="true"></div>
+      <!-- Tukar gambar.jpg kepada nama fail gambar anda dalam repository -->
+      <img class="profile-photo" src="gambar.jpg" alt="Gambar profil cikgu" />
+    </div>
+
+    <h1 id="main-title">Hai, Penjelajah Zoo! 🐾</h1>
+    <p class="subtitle">Bersedia untuk bermain sambil belajar kata adjektif sifat dan ukuran?</p>
+
+    <div class="speech">
+      “Hai kawan-kawan! Masa untuk bermain! Jom uji kefahaman kawan-kawan tentang kata adjektif sifat dan ukuran. Pilih jawapan di bawah dan padankan pada haiwan yang betul. Jom mula!”
+    </div>
+
+    <section class="audio-panel" aria-label="Rakaman suara cikgu">
+      <p class="audio-label">🎙️ Dengar pesanan cikgu</p>
+      <!-- Tukar audio.mp3 kepada nama fail rakaman suara anda dalam repository -->
+      <audio id="teacher-audio" preload="metadata">
+        <source src="audio.mp3" type="audio/mpeg" />
+        <source src="audio.ogg" type="audio/ogg" />
+        Pelayar anda tidak menyokong audio HTML.
+      </audio>
+      <div class="controls">
+        <button id="play-btn" type="button">▶ Mainkan suara</button>
+        <button id="replay-btn" class="secondary" type="button">↻ Ulang dari awal</button>
+      </div>
+      <div id="wave" class="wave" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <p id="audio-status" class="status" aria-live="polite">Tekan “Mainkan suara” untuk mendengar pesanan cikgu.</p>
+    </section>
+
+    <div class="animal-row" aria-label="Haiwan dalam misi zoo">
+      <span class="animal-chip">🐘 Gajah</span>
+      <span class="animal-chip">🦒 Zirafah</span>
+      <span class="animal-chip">🦁 Singa</span>
+      <span class="animal-chip">🐒 Monyet</span>
+    </div>
+    <p class="footer">🌱 Tarik nafas, fokus dan selamat meneroka! 🌱</p>
+  </main>
+
+  <script>
+    const audio = document.getElementById('teacher-audio');
+    const playBtn = document.getElementById('play-btn');
+    const replayBtn = document.getElementById('replay-btn');
+    const wave = document.getElementById('wave');
+    const status = document.getElementById('audio-status');
+
+    function setPlaying(isPlaying) {
+      wave.classList.toggle('playing', isPlaying);
+      playBtn.textContent = isPlaying ? '⏸ Jeda suara' : '▶ Mainkan suara';
+      if (isPlaying) status.textContent = 'Suara cikgu sedang dimainkan…';
+    }
+
+    playBtn.addEventListener('click', async () => {
+      if (audio.paused) {
+        try {
+          await audio.play();
+        } catch (error) {
+          status.textContent = 'Audio tidak dapat dimainkan. Semak nama fail dan lokasi audio dalam repository GitHub.';
+        }
+      } else {
+        audio.pause();
+      }
+    });
+
+    replayBtn.addEventListener('click', async () => {
+      audio.currentTime = 0;
+      try {
+        await audio.play();
+      } catch (error) {
+        status.textContent = 'Audio tidak dapat dimainkan. Semak nama fail dan lokasi audio dalam repository GitHub.';
+      }
+    });
+
+    audio.addEventListener('play', () => setPlaying(true));
+    audio.addEventListener('pause', () => {
+      setPlaying(false);
+      if (audio.currentTime > 0 && !audio.ended) status.textContent = 'Suara dijeda. Tekan butang main untuk sambung.';
+    });
+    audio.addEventListener('ended', () => {
+      setPlaying(false);
+      status.textContent = 'Syabas! Sedia untuk memulakan misi kata adjektif? Tekan ulang jika mahu mendengar sekali lagi.';
+      playBtn.textContent = '▶ Mainkan semula';
+    });
+    audio.addEventListener('error', () => {
+      setPlaying(false);
+      status.textContent = 'Fail audio belum dijumpai. Pastikan nama fail dalam kod sama dengan nama fail rakaman di GitHub.';
+    });
+  </script>
+</body>
+</html>
